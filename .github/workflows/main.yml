@@ -1,14 +1,22 @@
-# .github/workflows/email-step.yml
-name: Email Step Action
-
+name: Daily Auto-Commit
 on:
-  push:
-    branches: [ main ]
-  workflow_dispatch:
+  schedule:
+    # Runs at 12:00 UTC every day (cron syntax: min hr day month day-of-week)
+    - cron: '0 12 * * *'
+  workflow_dispatch:  # Allow manual triggering
 
 jobs:
-  test:
+  auto-commit:
     runs-on: ubuntu-latest
     steps:
-      - name: 23f3001989@ds.study.iitm.ac.in
-        run: echo "Hello, world from email step!"
+      - name: Checkout repo 🛎️ (23f3001989@ds.study.iitm.ac.in)
+        uses: actions/checkout@v4
+
+      - name: Create a commit 📌
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          echo "# Daily Auto-Commit: $(date)" >> auto-commit.log
+          git add auto-commit.log
+          git commit -m "🤖 Auto-commit: $(date +'%Y-%m-%d %H:%M:%S')"
+          git push
