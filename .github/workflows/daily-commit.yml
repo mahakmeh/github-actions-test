@@ -1,16 +1,19 @@
 name: Daily Auto-Commit
 on:
   schedule:
-    # Runs at 12:00 UTC every day (cron syntax: min hr day month day-of-week)
-    - cron: '0 12 * * *'
-  workflow_dispatch:  # Allow manual triggering
+    - cron: '0 12 * * *'  # Runs at 12:00 UTC daily
+  workflow_dispatch:       # Allow manual triggering
 
 jobs:
   auto-commit:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write      # Required to push commits
     steps:
       - name: Checkout repo 🛎️ (23f3001989@ds.study.iitm.ac.in)
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Required for git history
 
       - name: Create a commit 📌
         run: |
